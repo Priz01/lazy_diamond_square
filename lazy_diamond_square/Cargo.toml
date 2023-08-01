@@ -1,6 +1,6 @@
 [package]
 name = "lazy_diamond_square"
-version = "0.1.0"
+version = "0.1.0-1"
 edition = "2021"
 authors = ["Priz01 <vlaula27_priz01@vk.com>"]
 repository = "https://github.com/Priz01/lazy_diamond_square/"
@@ -15,3 +15,8 @@ description = "Lazy and fast implementation of the diamond-square without random
 tinyrand = "0.5"
 tinyrand-std = "0.5"
 seahash = "4"
+
+lds_simple_view = { version = "0.1", optional = true }
+
+[features]
+simple_view = ["dep:lds_simple_view"]

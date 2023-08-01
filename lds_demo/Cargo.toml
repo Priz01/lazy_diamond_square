@@ -6,5 +6,5 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-lazy_diamond_square = "0.1"
-lds_simple_view = { path = "../lds_simple_view" }
+lazy_diamond_square = { version = "0.1", features = ["simple_view"] }
+lds_simple_view = "0.1.0"
