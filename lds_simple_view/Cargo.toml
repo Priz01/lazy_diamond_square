@@ -2,10 +2,15 @@
 name = "lds_simple_view"
 version = "0.1.0"
 edition = "2021"
+authors = ["Priz01 <vlaula27_priz01@vk.com>"]
+repository = "https://github.com/Priz01/lazy_diamond_square/"
+homepage = "https://github.com/Priz01/lazy_diamond_square/"
+license = "MIT OR Apache-2.0"
+description = "A simple way to view the contents of a HeightMap structure from a lazy_diamond_square"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-image = "0.24.6"
+image = "0.24"
 
-lazy_diamond_square = { path = "../lazy_diamond_square" }
+lazy_diamond_square = "0.1"

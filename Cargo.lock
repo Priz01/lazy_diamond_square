@@ -265,10 +265,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "lazy_diamond_square"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "89219b09b324718d811535b7ac8eee189c902720d33acd18ad5f7d2c1e5d7aee"
+dependencies = [
+ "seahash",
+ "tinyrand",
+ "tinyrand-std",
+]
+
+[[package]]
 name = "lds_demo"
 version = "0.1.0"
 dependencies = [
- "lazy_diamond_square",
+ "lazy_diamond_square 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "lds_simple_view",
 ]
 
@@ -277,7 +288,7 @@ name = "lds_simple_view"
 version = "0.1.0"
 dependencies = [
  "image",
- "lazy_diamond_square",
+ "lazy_diamond_square 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

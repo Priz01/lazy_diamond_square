@@ -12,6 +12,6 @@ description = "Lazy and fast implementation of the diamond-square without random
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tinyrand = "0.5.0"
-tinyrand-std = "0.5.0"
-seahash = "4.1.0"
+tinyrand = "0.5"
+tinyrand-std = "0.5"
+seahash = "4"

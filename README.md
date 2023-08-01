@@ -2,21 +2,71 @@
 
 The lazy_diamond_square(hereafter LDS) will allow you to use the Diamond-Square algorithm to generate your own landscapes or anything else where it might come in handy.
 
-Here is what I have implemented in version 0.1.0 and plan to implement in future versions:
-* The ability to reproduce the result, i.e. not using time-dependent pseudo-random numbers on your device, when calculating the height of a point. +
+## Example
 
-* Ability to not generate the whole map at once, but only some parts of it that are needed. +
+```
+use lazy_diamond_square as lds;
+use lds::InitBy as By;
+use lds::Parameters::*;
 
-* Maximum optimization of the project to work even on weak machines. + -
- - Optimize everything that can be optimized without any fancy actions (for example, add ´if´ operator not at the beginning of the loop, but before it, if possible). +
- - Add optimized division of the number modulo. -
- - Add multithreading and asynchronous execution. -
+use lds::HeightMap;
 
-* Modify functions with the postfix ´_all´ so that they do not apply the method to every point on the map, but only to the specified area, and replace the postfix with ´_area´. -
+use lds_simple_view::gen_img;
 
-* Add more information about the project to the README file and make the text inside the file more readable. -
+fn main() {
+    let mut map = HeightMap::new(
+        513,
+        0.15,
+        vec![
+            Seed("view.png"),
+            InitLevel(2),
+            InitBy(By::Seed),
+        ],
+    );
 
-# Sources I took inspiration and information from
+    map.gen_all();
+
+    gen_img(&map, "view.png");
+}
+```
+
+## Examples of work
+
+roughness = 0.15, Seed(view1)
+![Example 1: roughness = 0.15, Seed("view1.png")](/view1.png)
+
+roughness = 0.2, Seed(view2)
+![Example 2: roughness = 0.2, Seed("view2.png")](/view2.png)
+
+roughness = 0.2, Seed(view3), InitLevel(4)
+![Example 3: roughness = 0.2, Seed("view3.png"), InitLevel(4)](/view3.png)
+
+## How it works
+
+There's nothing here yet, but in future versions I'll add a detailed explanation of how it works. For now, just take a look at the project documentation and you'll learn the essentials.
+I've reinstalled the OS now, but I'm leaving soon to visit my grandmother in the country, so these changes are minor.
+By the way, to explain how lazy_diamond_square works, I plan to post an article on Habr, but if there are enough requests, I will describe the workings of LDS here as well, in English.
+
+## TODO
+
+- [x] The ability to reproduce the result, i.e. not using time-dependent pseudo-random numbers on your device, when calculating the height of a point.
+
+- [x] Ability to not generate the whole map at once, but only some parts of it that are needed.
+
+- [ ] Maximum optimization of the project to work even on weak machines.
+    - [x] Optimize everything that can be optimized without any fancy actions (for example, add ´if´ operator not at the beginning of the loop, but before it, if possible).
+    - [ ] Add optimized division of the number modulo.
+    - [ ] Add multithreading and asynchronous execution.
+
+- [ ] Modify functions with the postfix ´_all´ so that they do not apply the method to every point on the map, but only to the specified area, and replace the postfix with ´_area´.
+
+- [ ] Add more information about the project to the README file.
+
+## !!!
+
+I just wanted to let you know that I'm 13 and this is my first serious project, so I'll be only glad for criticism and advice on how to improve my project. All text in this file is translated with the help of a translator, because I don't know English so well yet.
+
+## Sources
 
 * [Habr article](https://habr.com/ru/articles/111538/) (it's in Russian, so I suggest you use an extension in your browser, like ImTranslator for FireFox, for example).
 
@@ -27,17 +77,3 @@ Here is what I have implemented in version 0.1.0 and plan to implement in future
 * [Python implementation](https://github.com/buckinha/DiamondSquare/tree/master)
 
 * And anything else you can google for "diamond square". It's very long to list everything, so I just pointed out the main things and this item.
-
-# Explanation of how the project works
-
-There is nothing here yet, but in future versions I will add here a detailed explanation of how it works. For now, you only need to look at the project documentation and you will learn the essentials.
-I'm going to reinstall my OS the other day, so I'm posting the project in a hurry and raw. To be more precise, only the README file is not completely finished.
-
-# Example of work
-
-![Example](/view.png "Example")
-
-
-# !!!
-
-I just wanted to let you know that I'm 13 and this is my first serious project, so I'll be only glad for criticism and advice on how to improve my project. All text in this file is translated with the help of a translator, because I don't know English so well yet.

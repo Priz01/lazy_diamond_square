@@ -452,10 +452,10 @@ impl HeightMap {
                 }
             }
             InitBy::Seed => {
-                let step = if lvl > 0 {
+                let step = if lvl > 1 {
                     self.max_coord() >> (lvl - 1)
                 } else {
-                    0
+                    1
                 };
 
                 let mut x = 0;
