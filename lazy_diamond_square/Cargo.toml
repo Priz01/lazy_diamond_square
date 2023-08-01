@@ -1,6 +1,6 @@
 [package]
 name = "lazy_diamond_square"
-version = "0.1.0-1"
+version = "0.1.1"
 edition = "2021"
 authors = ["Priz01 <vlaula27_priz01@vk.com>"]
 repository = "https://github.com/Priz01/lazy_diamond_square/"
