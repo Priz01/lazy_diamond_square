@@ -6,7 +6,7 @@ authors = ["Priz01 <vlaula27_priz01@vk.com>"]
 repository = "https://github.com/Priz01/lazy_diamond_square/"
 homepage = "https://github.com/Priz01/lazy_diamond_square/"
 license = "MIT OR Apache-2.0"
-description = "This crate is OBSOLETE. USE gen_img method INSTEAD! A simple way to view the contents of a HeightMap structure from a lazy_diamond_square"
+description = "This crate is DEPRECATED. USE gen_img method INSTEAD! A simple way to view the contents of a HeightMap structure from a lazy_diamond_square"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
