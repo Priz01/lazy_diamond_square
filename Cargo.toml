@@ -2,6 +2,5 @@
 
 members = [
     "lazy_diamond_square",
-    "lds_simple_view",
     "lds_demo",
 ]
