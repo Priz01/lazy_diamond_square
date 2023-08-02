@@ -4,7 +4,7 @@ The lazy_diamond_square(hereafter LDS) will allow you to use the Diamond-Square 
 
 ## Example
 
-```
+```rust
 use lazy_diamond_square as lds;
 use lds::InitBy as By;
 use lds::Parameters::*;
@@ -32,20 +32,20 @@ fn main() {
 
 ## Examples of work
 
-roughness = 0.15, Seed(view1)
+roughness = 0.15, Seed("view1.png")
 ![Example 1: roughness = 0.15, Seed("view1.png")](/view1.png)
 
-roughness = 0.2, Seed(view2)
+roughness = 0.2, Seed("view2.png")
 ![Example 2: roughness = 0.2, Seed("view2.png")](/view2.png)
 
-roughness = 0.2, Seed(view3), InitLevel(4)
+roughness = 0.2, Seed("view3.png"), InitLevel(4)
 ![Example 3: roughness = 0.2, Seed("view3.png"), InitLevel(4)](/view3.png)
 
 ## How it works
 
-There's nothing here yet, but in future versions I'll add a detailed explanation of how it works. For now, just take a look at the project documentation and you'll learn the essentials.
-I've reinstalled the OS now, but I'm leaving soon to visit my grandmother in the country, so these changes are minor.
-By the way, to explain how lazy_diamond_square works, I plan to post an article on Habr, but if there are enough requests, I will describe the workings of LDS here as well, in English.
+There's nothing here yet, but I'll add something here in future versions. For now, just take a look at the project documentation and you'll know the essentials.
+I'm leaving tomorrow to visit my grandmother in the country, so these changes are minor.
+To explain how LDS works, I plan to post an article on Habr, but if there are enough people interested, I will describe how LDS works here too, in English. Or I'll post the article somewhere.
 
 ## TODO
 
@@ -77,3 +77,7 @@ I just wanted to let you know that I'm 13 and this is my first serious project, 
 * [Python implementation](https://github.com/buckinha/DiamondSquare/tree/master)
 
 * And anything else you can google for "diamond square". It's very long to list everything, so I just pointed out the main things and this item.
+
+## Question for you
+
+Do I need to describe the changes to the current version here, or is a brief explanation of the commit on GitHub sufficient? Write your answer to my mail, [you know where to find it](https://doc.rust-lang.org/cargo/reference/manifest.html#the-authors-field).

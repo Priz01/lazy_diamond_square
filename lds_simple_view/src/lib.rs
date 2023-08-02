@@ -15,16 +15,15 @@ use image::{ImageBuffer, LumaA};
 use lazy_diamond_square as lds;
 use lds::HeightMap;
 
-/// When the ´gen_img´ function is called, an image will be
-/// created. The lighter the pixel, the higher the height value
-/// at that point. The image will have the ´LumaA´ color
-/// space from the 'image' crate. Locations with a height
-/// value of 'None' will have a default value.
-/// Warning! Do not use this function with instances of the
-/// ´HeightMap´ structure whose map size is very large! The
-/// output image will be 'map.size()'.
-/// Note: when specifying the `name` parameter, add
-/// the output image type, e.g. `"img.png"`.
+/// When the ´gen_img´ function is called, an image will be 
+/// created. The lighter the pixel, the higher the height value 
+/// at that point. Locations with a height value of 'None' will 
+/// have a default value. 
+/// Warning! Do not use this function with instances of 
+/// ´HeightMap´ structure whose map size is very large! The 
+/// output image size will be equal to 'map.size()'. 
+/// Note: when specifying the `name` parameter, add the 
+/// output image type, e.g. `"img.png"`. 
 pub fn gen_img(map: &HeightMap, name: &str) {
     let size = map.size() as u32;
 

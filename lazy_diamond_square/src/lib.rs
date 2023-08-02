@@ -19,10 +19,10 @@ use tinyrand_std::clock_seed::ClockSeed;
 use Parameters::*;
 
 const MIN_SIZE_SHIFT: u8 = 3;
-/// The constant with the value of the minimum map size. If you
-/// specify the `size` parameter less than this constant when
-/// calling `HeightMap::new`, it will be changed to equal to
-/// this constant.
+/// The constant with the value of the minimum map size. If you 
+/// specify the `size` parameter less than this constant when 
+/// calling `HeightMap::new`, it will be changed to equal to 
+/// this constant. 
 /// 
 /// # Examples 
 /// 
@@ -32,10 +32,10 @@ const MIN_SIZE_SHIFT: u8 = 3;
 pub const MIN_SIZE: i32 = (1 << MIN_SIZE_SHIFT) + 1;
 
 const MAX_SIZE_SHIFT: u8 = 29;
-/// The constant with the value of the maximum map size. If
-/// when calling `HeightMap::new` you specify the `size`
-/// parameter greater than this constant, it will change to
-/// equal to this constant.
+/// The constant with the value of the maximum map size. If 
+/// when calling `HeightMap::new` you specify the `size` 
+/// parameter greater than this constant, it will change to 
+/// equal to this constant. 
 /// 
 /// # Examples 
 /// 
@@ -45,7 +45,7 @@ const MAX_SIZE_SHIFT: u8 = 29;
 pub const MAX_SIZE: i32 = (1 << MAX_SIZE_SHIFT) + 1;
 
 #[derive()]
-/// This structure is the main structure in this crate.
+/// This structure is the main structure in this crate. 
 pub struct HeightMap {
     map: Vec<Option<f32>>,
     size: i32,
@@ -56,10 +56,10 @@ pub struct HeightMap {
 }
 
 impl HeightMap {
-    /// Returns a new instance of the `HeightMap` structure.
-    /// Optionally you can pass some parameters such as seed,
-    /// initialization level or other from the Parameters
-    /// enumeration.
+    /// Returns a new instance of the `HeightMap` structure. 
+    /// Optionally you can pass some parameters such as seed, 
+    /// initialization level or other from the Parameters 
+    /// enumeration. 
     pub fn new(size: i32, roughness: f32, param: Vec<Parameters>) -> Self {
         let mut map = Self {
             map: vec![None; (size * size) as usize],
@@ -86,14 +86,14 @@ impl HeightMap {
 
         map
     }
-    /// Getter for `size` field.
+    /// Getter for `size` field. 
     pub fn size(&self) -> i32 {
         self.size
     }
-    /// Returns the maximum value of the coordinate. If a value
-    /// greater than this is passed into a function such as `get`, it
-    /// will change inside the function to a valid value that is less
-    /// than or equal to this value.
+    /// Returns the maximum value of the coordinate. If a value 
+    /// greater than this is passed into a function such as `get`, it 
+    /// will change inside the function to a valid value that is less 
+    /// than or equal to this value. 
     /// 
     /// # Examples
     /// 
@@ -108,11 +108,11 @@ impl HeightMap {
     pub fn max_coord(&self) -> i32 {
         self.size() - 1
     }
-    /// Getter for `seed` field.
+    /// Getter for `seed` field. 
     pub fn seed(&self) -> u64 {
         self.seed
     }
-    /// Getter for `roughness` field.
+    /// Getter for `roughness` field. 
     pub fn roughness(&self) -> f32 {
         self.roughness
     }
@@ -165,9 +165,9 @@ impl HeightMap {
     fn set_change_calced_h_fn(&mut self, func: Box<dyn Fn(i32, i32, f32) -> f32>) {
         self.change_calced_h_fn = func;
     }
-    /// Returns the height value at specified coordinates. If
-    /// this value exceeds the range `0..=self.max_coord()`, it is
-    /// changed to valid coordinates.
+    /// Returns the height value at specified coordinates. If 
+    /// this value exceeds the range `0..=self.max_coord()`, it is 
+    /// changed to valid coordinates. 
     /// 
     /// # Examples
     /// 
@@ -187,10 +187,10 @@ impl HeightMap {
         let index: usize = (y * self.size() + x) as usize;
         self.map[index]
     }
-    /// Sets the passed value at specified coordinates and
-    /// returns the value that was there before. If this coordinates
-    /// leaves the range `0..=self.max_coord()`, this coordinates are
-    /// changed to valid coordinates.
+    /// Sets the passed value at specified coordinates and 
+    /// returns the value that was there before. If this coordinates 
+    /// leaves the range `0..=self.max_coord()`, this coordinates are 
+    /// changed to valid coordinates. 
     /// 
     /// # Examples
     /// 
@@ -217,14 +217,14 @@ impl HeightMap {
 
         old
     }
-    /// Checks the value against the specified coordinates, and if
-    /// the value is `None`, then generates the new height value,
-    /// sets it and returns the same value and `true`. Otherwise,
-    /// returns the resulting height value and `false`. Also
-    /// returns `(None, false)` if the value cannot be generated
-    /// because at least one corner of the map is set to `None`. If
-    /// this coordinate value is outside the range `0..=self.max_coord()`,
-    /// this coordinates are changed to valid coordinates.
+    /// Checks the value against the specified coordinates, and if 
+    /// the value is `None`, then generates the new height value, 
+    /// sets it and returns the same value and `true`. Otherwise, 
+    /// returns the resulting height value and `false`. Also 
+    /// returns `(None, false)` if the value cannot be generated 
+    /// because at least one corner of the map is set to `None`. If 
+    /// this coordinate value is outside the range `0..=self.max_coord()`, 
+    /// this coordinates are changed to valid coordinates. 
     /// 
     /// # Examples
     /// 
@@ -253,11 +253,11 @@ impl HeightMap {
             },
         }
     }
-    /// Generates a new height value, sets it and returns the
-    /// old and new values. Returns old value and `None` if the value
-    /// cannot be generated because at least one corner of the
-    /// map is set to `None`. If this coordinate value is outside the
-    /// range `0..=max_coord()`, this coordinates are changed to
+    /// Generates a new height value, sets it and returns the 
+    /// old and new values. Returns old value and `None` if the value 
+    /// cannot be generated because at least one corner of the 
+    /// map is set to `None`. If this coordinate value is outside the 
+    /// range `0..=max_coord()`, this coordinates are changed to 
     /// valid coordinates.
     /// 
     /// # Examples
@@ -284,8 +284,8 @@ impl HeightMap {
             None => (None, None),
         }
     }
-    /// Returns a vector of the results of calls to the `get`
-    /// method for each point on the map.
+    /// Returns a vector of the results of calls to the `get` 
+    /// method for each point on the map. 
     pub fn get_all(&self) -> Vec<Option<f32>> {
         let mut map = Vec::with_capacity(self.size().pow(2) as usize);
 
@@ -297,8 +297,8 @@ impl HeightMap {
 
         map
     }
-    /// Returns a vector of the results of calls to the `set`
-    /// method for each point on the map.
+    /// Returns a vector of the results of calls to the `set` 
+    /// method for each point on the map. 
     pub fn set_all(&mut self, h: f32) -> Vec<Option<f32>> {
         let mut old_map = Vec::with_capacity(self.size().pow(2) as usize);
 
@@ -310,8 +310,8 @@ impl HeightMap {
 
         old_map
     }
-    /// Returns a vector of the results of calls to the `gen`
-    /// method for each point on the map.
+    /// Returns a vector of the results of calls to the `gen` 
+    /// method for each point on the map. 
     pub fn gen_all(&mut self) -> Vec<(Option<f32>, bool)> {
         let mut map = Vec::with_capacity(self.size().pow(2) as usize);
 
@@ -323,18 +323,36 @@ impl HeightMap {
 
         map
     }
-    /// Returns a vector of the results of calls to the `regen`
-    /// method for each point on the map.
-    pub fn regen_all(&mut self) -> Vec<(Option<f32>, Option<f32>)> {
-        let mut map = Vec::with_capacity(self.size().pow(2) as usize);
-        
-        for y in 0..self.size() {
-            for x in 0..self.size() {
-                map.push(self.regen(x, y));
+    /// When ´gen_img´ is called, an image will be created. The 
+    /// lighter the pixel, the higher the height value at that point. 
+    /// Locations with a height value of 'None' will have a default 
+    /// value.
+    /// Warning! Do not use this function with instances of 
+    /// ´HeightMap´ structure whose map size is very large! The 
+    /// output image size will be equal to 'map.size()'. 
+    /// Note: when specifying the `name` parameter, add the 
+    /// output image type, e.g. `"img.png"`. 
+    #[cfg(feature = "simple_viewing")]
+    pub fn gen_img(&self, name: &str) {
+        use image::{ImageBuffer, LumaA};
+
+        let size = self.size() as u32;
+
+        let mut cur: Option<f32>;
+
+        let mut img: ImageBuffer<LumaA<u8>, Vec<u8>> = ImageBuffer::new(size, size);
+
+        for y in 0..size {
+            for x in 0..size {
+                cur = self.get(x as i32, y as i32);
+
+                if let Some(cur_h) = cur {
+                    img.put_pixel(x, y, LumaA([(255.0 * cur_h) as u8, 255]))
+                }
             }
         }
 
-        map
+        img.save(name).unwrap();
     }
 
     fn init(&mut self, lvl: u8, init_by: InitBy) {
@@ -779,8 +797,8 @@ impl fmt::Debug for HeightMap {
 }
 
 #[derive()]
-/// This is an enumeration with possible parameters for
-/// creating an instance of the `HeightMap` structure.
+/// This is an enumeration with possible parameters for 
+/// creating an instance of the `HeightMap` structure. 
 pub enum Parameters<'a> {
     Seed(&'a str),
     InitLevel(u8),
@@ -801,8 +819,8 @@ impl<'a> fmt::Debug for Parameters<'a> {
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-/// This is an enumeration with possible options for
-/// initializing a height map of an instance of the
+/// This is an enumeration with possible options for 
+/// initializing a height map of an instance of the 
 /// `HeightMap` structure.
 pub enum InitBy {
     DiamondSquare,

@@ -1,4 +1,5 @@
 /target
 /.vscode
 /view.png
-/lds_demo/
+/Cargo.lock
+/lds_demo
