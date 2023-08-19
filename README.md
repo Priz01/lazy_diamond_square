@@ -35,7 +35,6 @@ roughness = 0.2, Seed("view3.png"), InitLevel(4)
 ## How it works
 
 There's nothing here yet, but I'll add something here in future versions. For now, just take a look at the project documentation and you'll know the essentials.
-I'm leaving tomorrow to visit my grandmother in the country, so these changes are minor.
 To explain how LDS works, I plan to post an article on Habr, but if there are enough people interested, I will describe how LDS works here too, in English. Or I'll post the article somewhere.
 
 ## TODO
