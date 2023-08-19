@@ -1,32 +1,23 @@
 # Lazy Diamond-Square
 
-The lazy_diamond_square(hereafter LDS) will allow you to use the Diamond-Square algorithm to generate your own landscapes or anything else where it might come in handy.
+The lazy_diamond_square (hereafter LDS) will allow you to use the Diamond-Square algorithm to generate your own landscapes or anything else where it might come in handy.
 
 ## Example
 
 ```rust
 use lazy_diamond_square as lds;
-use lds::InitBy as By;
-use lds::Parameters::*;
-
-use lds::HeightMap;
-
-use lds_simple_view::gen_img;
+use lds::{Builder, InitBy as By};
 
 fn main() {
-    let mut map = HeightMap::new(
-        513,
-        0.15,
-        vec![
-            Seed("view.png"),
-            InitLevel(2),
-            InitBy(By::Seed),
-        ],
-    );
+    let mut map = Builder::new(513, 0.15)
+        .seed("qwerty")
+        .init_lvl(2)
+        .init_by(By::Seed)
+        .build();
+    let max_coord = map.max_coord();
 
-    map.gen_all();
-
-    gen_img(&map, "view.png");
+    map.gen_area( (0, 0), (max_coord, max_coord));
+    map.get_img((0, 0), (max_coord, max_coord), Some("view.png"));
 }
 ```
 
@@ -49,16 +40,7 @@ To explain how LDS works, I plan to post an article on Habr, but if there are en
 
 ## TODO
 
-- [x] The ability to reproduce the result, i.e. not using time-dependent pseudo-random numbers on your device, when calculating the height of a point.
-
-- [x] Ability to not generate the whole map at once, but only some parts of it that are needed.
-
-- [ ] Maximum optimization of the project to work even on weak machines.
-    - [x] Optimize everything that can be optimized without any fancy actions (for example, add ´if´ operator not at the beginning of the loop, but before it, if possible).
-    - [ ] Add optimized division of the number modulo.
-    - [ ] Add multithreading and asynchronous execution.
-
-- [ ] Modify functions with the postfix ´_all´ so that they do not apply the method to every point on the map, but only to the specified area, and replace the postfix with ´_area´.
+- [x] Modify functions with the postfix ´_all´ so that they do not apply the method to every point on the map, but only to the specified area, and replace the postfix with ´_area´.
 
 - [ ] Add more information about the project to the README file.
 
@@ -77,7 +59,3 @@ I just wanted to let you know that I'm 13 and this is my first serious project, 
 * [Python implementation](https://github.com/buckinha/DiamondSquare/tree/master)
 
 * And anything else you can google for "diamond square". It's very long to list everything, so I just pointed out the main things and this item.
-
-## Question for you
-
-Do I need to describe the changes to the current version here, or is a brief explanation of the commit on GitHub sufficient? Write your answer to my mail, [you know where to find it](https://doc.rust-lang.org/cargo/reference/manifest.html#the-authors-field).
