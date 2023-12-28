@@ -18,6 +18,7 @@ use tinyrand_std::clock_seed::ClockSeed;
 
 #[cfg(feature = "simple_viewing")]
 pub use image::ImageBuffer;
+#[cfg(feature = "simple_viewing")]
 use image::LumaA;
 
 const MIN_SIZE_SHIFT: u8 = 3;
