@@ -17,7 +17,8 @@ use tinyrand::{Rand, Seeded, StdRand};
 use tinyrand_std::clock_seed::ClockSeed;
 
 #[cfg(feature = "simple_viewing")]
-use image::{ImageBuffer, LumaA};
+pub use image::ImageBuffer;
+use image::LumaA;
 
 const MIN_SIZE_SHIFT: u8 = 3;
 /// The constant with the value of the minimum map size. If you
@@ -51,7 +52,8 @@ pub struct HeightMap {
     size: i32,
     roughness: f32,
     seed: u64,
-    is_random_seeded_by_clock: bool,
+    use_clock_seed: bool,
+    gen_rand_fn: Box<dyn Fn(i32, i32, u64) -> u64>,
     calc_roughness_fn: Box<dyn Fn(i32, i32, f32) -> f32>,
     change_calced_h_fn: Box<dyn Fn(i32, i32, f32) -> f32>,
 }
@@ -104,9 +106,9 @@ impl HeightMap {
     pub fn seed(&self) -> u64 {
         self.seed
     }
-    /// Getter for `is_random_seeded_by_clock` field.
-    pub fn is_random_seeded_by_clock(&self) -> bool {
-        self.is_random_seeded_by_clock
+    /// Getter for `use_clock_seed` field.
+    pub fn use_clock_seed(&self) -> bool {
+        self.use_clock_seed
     }
 
     fn set_size(&mut self, size: i32) {
@@ -250,15 +252,20 @@ impl HeightMap {
             let mut len = coords.len();
             let mut step = self.calc_step(x, y);
 
-            let mut is_diamond: bool = false;
+            let mut diamond_step: bool = false;
 
             if ((x & step) != 0) && ((y & step) != 0) {
-                is_diamond = true;
+                diamond_step = true;
             }
 
             while len != 0 {
-                let (x, y) =
-                    self.calc_coords(last_coords[0], last_coords[1], step, last_index, is_diamond);
+                let (x, y) = self.calc_coords(
+                    last_coords[0],
+                    last_coords[1],
+                    step,
+                    last_index,
+                    diamond_step,
+                );
                 let (x, y) = self.to_valid_coords(x, y);
 
                 if let Some(height) = self.get(x, y) {
@@ -294,7 +301,7 @@ impl HeightMap {
                             last_coords = *coords.last().unwrap();
                         }
 
-                        is_diamond = !is_diamond;
+                        diamond_step = !diamond_step;
                     }
                 } else {
                     indexes.push(0);
@@ -306,7 +313,7 @@ impl HeightMap {
 
                     step = self.calc_step(x, y);
 
-                    is_diamond = ((x & step) != 0) && ((y & step) != 0);
+                    diamond_step = ((x & step) != 0) && ((y & step) != 0);
                 }
 
                 if len != 0 {
@@ -382,10 +389,12 @@ impl HeightMap {
 
         area
     }
-    /// When ´get_img´ is called, an image will be created. The
-    /// lighter the pixel, the higher the height value at that point.
-    /// Locations with a height value of 'None' will have a default
-    /// value.
+    /// The lighter the pixel, the higher the height value at
+    /// that point. Locations with a height value of 'None' will
+    /// have a default value. To save use 'save' or
+    /// 'save_with_format' methods.
+    ///
+    /// Creates an image with passed file name and extension, if called.
     #[cfg(feature = "simple_viewing")]
     pub fn get_img(
         &self,
@@ -617,38 +626,10 @@ impl HeightMap {
         };
 
         let rand = {
-            if self.is_random_seeded_by_clock() {
+            if self.use_clock_seed() {
                 StdRand::seed(ClockSeed.next_u64()).next_u16()
             } else {
-                let mut seed = self.seed();
-
-                seed ^= {
-                    let mut x = x as u64;
-                    let mut y = y as u64;
-
-                    let mut xm7: u64 = x % 7;
-                    let mut xm13: u64 = x % 13;
-                    let mut xm1301081: u64 = x % 1301081;
-                    let mut ym8461: u64 = y % 8461;
-                    let mut ym105467: u64 = y % 105467;
-                    let mut ym105943: u64 = y % 105943;
-
-                    for _ in 0..80 {
-                        y = x + seed;
-                        x += xm7 + xm13 + xm1301081 + ym8461 + ym105467 + ym105943;
-                        xm7 = x % 7;
-                        xm13 = x % 13;
-                        xm1301081 = x % 1301081;
-                        ym8461 = y % 8461;
-                        ym105467 = y % 105467;
-                        ym105943 = y % 105943;
-                    }
-
-                    ((xm7 + xm13 + xm1301081 + ym8461 + ym105467 + ym105943) as f64 / 1520972.0)
-                        .to_bits()
-                };
-
-                StdRand::seed(seed).next_u16()
+                StdRand::seed((self.gen_rand_fn)(x, y, self.seed())).next_u16()
             }
         };
 
@@ -674,34 +655,34 @@ impl HeightMap {
         step
     }
 
-    fn calc_coords(&self, x: i32, y: i32, step: i32, index: u8, is_diamond: bool) -> (i32, i32) {
+    fn calc_coords(&self, x: i32, y: i32, step: i32, index: u8, diamond_step: bool) -> (i32, i32) {
         let (mut x, mut y) = (x, y);
 
         if let 0 = index {
-            if is_diamond {
+            if diamond_step {
                 (x, y) = (x + step, y - step)
             } else {
                 (x, y) = (x, y - step)
             }
         } else if let 1 = index {
-            if is_diamond {
+            if diamond_step {
                 (x, y) = (x + step, y + step)
             } else {
                 (x, y) = (x + step, y)
             }
         } else if let 2 = index {
-            if is_diamond {
+            if diamond_step {
                 (x, y) = (x - step, y + step)
             } else {
                 (x, y) = (x, y + step)
             }
-        } else if is_diamond {
+        } else if diamond_step {
             (x, y) = (x - step, y - step)
         } else {
             (x, y) = (x - step, y)
         }
 
-        if !is_diamond {
+        if !diamond_step {
             if x < 0 {
                 x -= 1;
             } else if x >= self.size() {
@@ -746,7 +727,34 @@ impl Default for HeightMap {
             size: MIN_SIZE,
             roughness: 0.0,
             seed: StdRand::seed(ClockSeed.next_u64()).next_u64(),
-            is_random_seeded_by_clock: false,
+            use_clock_seed: false,
+            gen_rand_fn: Box::new(|x: i32, y: i32, seed: u64| {
+                seed ^ {
+                    let mut x = x as u64;
+                    let mut y = y as u64;
+
+                    let mut xm7: u64 = x % 7;
+                    let mut xm13: u64 = x % 13;
+                    let mut xm1301081: u64 = x % 1301081;
+                    let mut ym8461: u64 = y % 8461;
+                    let mut ym105467: u64 = y % 105467;
+                    let mut ym105943: u64 = y % 105943;
+
+                    for _ in 0..80 {
+                        y = x + seed;
+                        x += xm7 + xm13 + xm1301081 + ym8461 + ym105467 + ym105943;
+                        xm7 = x % 7;
+                        xm13 = x % 13;
+                        xm1301081 = x % 1301081;
+                        ym8461 = y % 8461;
+                        ym105467 = y % 105467;
+                        ym105943 = y % 105943;
+                    }
+
+                    ((xm7 + xm13 + xm1301081 + ym8461 + ym105467 + ym105943) as f64 / 1520972.0)
+                        .to_bits()
+                }
+            }),
             calc_roughness_fn: Box::new(|_x: i32, _y: i32, r: f32| r),
             change_calced_h_fn: Box::new(|_x: i32, _y: i32, h: f32| h),
         }
@@ -760,18 +768,19 @@ impl fmt::Debug for HeightMap {
             .field("size", &self.size)
             .field("seed", &self.seed)
             .field("roughness", &self.roughness)
-            .field("is_random_seeded_by_clock", &self.is_random_seeded_by_clock)
+            .field("use_clock_seed", &self.use_clock_seed)
             .finish()
     }
 }
-/// For more flexible customization of `HeightMap`
-/// parameters, use this structure. The names of the
-/// methods correspond to the names of the fields to be set.
+/// For more flexible customization of `HeightMap` parameters.
+/// The names of the methods correspond to the names of the
+/// fields to be set.
 pub struct Builder {
     size: i32,
     seed: u64,
     roughness: f32,
-    is_random_seeded_by_clock: bool,
+    use_clock_seed: bool,
+    gen_rand_fn: Box<dyn Fn(i32, i32, u64) -> u64>,
     calc_roughness_fn: Box<dyn Fn(i32, i32, f32) -> f32>,
     change_calced_h_fn: Box<dyn Fn(i32, i32, f32) -> f32>,
 
@@ -826,9 +835,19 @@ impl Builder {
             ..self
         }
     }
-    pub fn is_random_seeded_by_clock(self, by_clock: bool) -> Self {
+    pub fn use_clock_seed(self, by_clock: bool) -> Self {
         Self {
-            is_random_seeded_by_clock: by_clock,
+            use_clock_seed: by_clock,
+            ..self
+        }
+    }
+    /// The closure set by this method are further used to
+    /// generate random numbers during height generation
+    /// at a particular point. No effect if you set
+    /// `use_clock_seed` to `true`.
+    pub fn gen_rand_fn(self, f: Box<dyn Fn(i32, i32, u64) -> u64>) -> Self {
+        Self {
+            gen_rand_fn: f,
             ..self
         }
     }
@@ -862,7 +881,8 @@ impl Builder {
             size: self.size,
             roughness: self.roughness,
             seed: self.seed,
-            is_random_seeded_by_clock: self.is_random_seeded_by_clock,
+            use_clock_seed: self.use_clock_seed,
+            gen_rand_fn: self.gen_rand_fn,
             calc_roughness_fn: self.calc_roughness_fn,
             change_calced_h_fn: self.change_calced_h_fn,
         };
@@ -879,7 +899,34 @@ impl Default for Builder {
             size: MIN_SIZE,
             seed: StdRand::seed(ClockSeed.next_u64()).next_u64(),
             roughness: 0.0,
-            is_random_seeded_by_clock: false,
+            use_clock_seed: false,
+            gen_rand_fn: Box::new(|x: i32, y: i32, seed: u64| {
+                seed ^ {
+                    let mut x = x as u64;
+                    let mut y = y as u64;
+
+                    let mut xm7: u64 = x % 7;
+                    let mut xm13: u64 = x % 13;
+                    let mut xm1301081: u64 = x % 1301081;
+                    let mut ym8461: u64 = y % 8461;
+                    let mut ym105467: u64 = y % 105467;
+                    let mut ym105943: u64 = y % 105943;
+
+                    for _ in 0..80 {
+                        y = x + seed;
+                        x += xm7 + xm13 + xm1301081 + ym8461 + ym105467 + ym105943;
+                        xm7 = x % 7;
+                        xm13 = x % 13;
+                        xm1301081 = x % 1301081;
+                        ym8461 = y % 8461;
+                        ym105467 = y % 105467;
+                        ym105943 = y % 105943;
+                    }
+
+                    ((xm7 + xm13 + xm1301081 + ym8461 + ym105467 + ym105943) as f64 / 1520972.0)
+                        .to_bits()
+                }
+            }),
             calc_roughness_fn: Box::new(|_x: i32, _y: i32, r: f32| r),
             change_calced_h_fn: Box::new(|_x: i32, _y: i32, h: f32| h),
 
@@ -895,7 +942,7 @@ impl fmt::Debug for Builder {
             .field("size", &self.size)
             .field("seed", &self.seed)
             .field("roughness", &self.roughness)
-            .field("is_random_seeded_by_clock", &self.is_random_seeded_by_clock)
+            .field("use_clock_seed", &self.use_clock_seed)
             .field("init_lvl", &self.init_lvl)
             .field("init_by", &self.init_by)
             .finish()
