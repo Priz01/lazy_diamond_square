@@ -1,6 +1,3 @@
 [workspace]
 
-members = [
-    "lazy_diamond_square",
-    "lds_demo",
-]
+members = ["lazy_diamond_square"]
