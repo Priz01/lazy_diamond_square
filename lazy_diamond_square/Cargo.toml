@@ -16,7 +16,7 @@ tinyrand = "0.5"
 tinyrand-std = "0.5"
 seahash = "4"
 
-image = { version = "0.24", optional = true }
+image = { version = "0.25", optional = true }
 
 [features]
 simple_viewing = ["dep:image"]

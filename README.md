@@ -3,16 +3,16 @@
 The lazy_diamond_square allow you to use the Diamond-Square algorithm to generate your own landscapes or anything else where it might come in handy.
 
 ## Example
+You should enable `simple_viewing` feature.
 
 ```rust
-use lazy_diamond_square as lds;
-use lds::{Builder, InitBy as By};
+use lazy_diamond_square::{Builder, InitBy};
 
 fn main() {
     let mut map = Builder::new(513, 0.15)
         .seed("qwerty")
         .init_lvl(2)
-        .init_by(By::Seed)
+        .init_by(InitBy::Seed)
         .build();
     let max_coord = map.max_coord();
 
@@ -46,4 +46,4 @@ fn main() {
 
 ## Conclusion
 
-I just wanted to let you know that I'm 13 and this is my first serious project, so I'll be only glad for criticism and advice on how to improve my project. All text in this file is translated with the help of a translator, because I don't know English so well yet.
+I just wanted to let you know that I'm 13 (I'm 14 at the time of this commit) and this is my first serious project, so I'll be only glad for criticism and advice on how to improve my project. All text in this file is translated with the help of a translator, because I don't know English so well yet.

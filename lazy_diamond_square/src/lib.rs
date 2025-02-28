@@ -401,7 +401,7 @@ impl HeightMap {
         &self,
         top_left: (i32, i32),
         bottom_right: (i32, i32),
-        name: Option<&str>,
+        file_name: Option<&str>,
     ) -> ImageBuffer<LumaA<u8>, Vec<u8>> {
         let (top_left, bottom_right) = (
             self.to_valid_coords(top_left.0, top_left.1),
@@ -430,8 +430,8 @@ impl HeightMap {
             }
         }
 
-        if let Some(img_name) = name {
-            img.save(img_name).unwrap();
+        if let Some(name) = file_name {
+            img.save(name).unwrap(); // Not sure if this is a good idea, but I don't want to change the API
         }
 
         img
